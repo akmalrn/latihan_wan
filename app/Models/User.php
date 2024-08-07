@@ -17,11 +17,11 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-
-    protected $table = 'users';
-    protected $primaryKey = 'id_user';
-
-    protected $fillable = ['username','password','role','email','verify_key','active'];
+    protected $fillable = [
+        'username',
+        'email',
+        'password',
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -40,11 +40,5 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
     ];
-
-    public function posts()
-    {
-        return $this->hasMany(Post::class);
-    }
 }

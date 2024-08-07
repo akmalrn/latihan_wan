@@ -10,18 +10,18 @@
 <body>
     <div class="container"><br>
         <div class="col-md-4 col-md-offset-4">
-            <h2 class="text-center"><b>ANISA</b><br>Aplikasi Nilai Santri</h2>
+            <h2 class="text-center"><b>ANISA</b><br>Aplikasi Nilai Santri</h3>
             <hr>
             @if(session('error'))
             <div class="alert alert-danger">
-                <b>Oops!</b> {{ session('error') }}
+                <b>Opps!</b> {{session('error')}}
             </div>
             @endif
             <form action="{{ route('actionlogin') }}" method="post">
             @csrf
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}" required="">
+                    <input type="email" name="email" class="form-control" placeholder="Email" required="">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
@@ -29,7 +29,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">Log In</button>
                 <hr>
-                <p class="text-center">Belum punya akun? <a href="{{ route('register') }}">Register</a> sekarang!</p>
+                <p class="text-center">Belum punya akun? <a href="/register">Register</a> sekarang!</p>
             </form>
         </div>
     </div>

@@ -2,36 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-
 
 class PostController extends Controller
 {
-    /**
-     * index
-     *
-     * @return void
-     */
     public function index()
     {
         //get posts
-        $userId = Auth::id();
-
-        // Ambil posts yang terkait dengan ID pengguna yang sedang login
         $posts = Post::latest()->paginate(5);
 
         //render view with posts
         return view('posts.index', compact('posts'));
     }
 
-    /**
-     * create
-     *
-     * @return void
-     */
     public function create()
     {
         return view('posts.create');
@@ -46,29 +31,25 @@ class PostController extends Controller
     public function store(Request $request)
     {
         //validate form
-        $request->validate([
+        $this->validate($request, [
             'image'     => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'title'     => 'required|min:5',
             'content'   => 'required|min:10'
         ]);
 
-        // Ambil ID pengguna yang sedang login
-        $userId = Auth::id();
-
-        // Upload image
+        //upload image
         $image = $request->file('image');
         $image->storeAs('public/posts', $image->hashName());
 
-        // Create post
+        //create post
         Post::create([
             'image'     => $image->hashName(),
             'title'     => $request->title,
-            'content'   => $request->content,
-            'user_id'   => $userId, // Simpan ID pengguna
+            'content'   => $request->content
         ]);
 
-        // Redirect ke index
-        return redirect()->route('posts.index')->with('success', 'Data Berhasil Disimpan!');
+        //redirect to index
+        return redirect()->route('posts.index')->with(['success' => 'Data Berhasil Disimpan!']);
     }
     public function edit(Post $post)
     {
@@ -99,7 +80,7 @@ class PostController extends Controller
             $image->storeAs('public/posts', $image->hashName());
 
             //delete old image
-            Storage::delete('public/posts/'.$post->image);
+            Storage::delete('public/posts/' . $post->image);
 
             //update post with new image
             $post->update([
@@ -107,7 +88,6 @@ class PostController extends Controller
                 'title'     => $request->title,
                 'content'   => $request->content
             ]);
-
         } else {
 
             //update post without image
@@ -123,7 +103,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         //delete image
-        Storage::delete('public/posts/'. $post->image);
+        Storage::delete('public/posts/' . $post->image);
 
         //delete post
         $post->delete();
@@ -131,6 +111,4 @@ class PostController extends Controller
         //redirect to index
         return redirect()->route('posts.index')->with(['success' => 'Data Berhasil Dihapus!']);
     }
-
-
 }
